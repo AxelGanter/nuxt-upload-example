@@ -79,8 +79,8 @@ export default defineEventHandler(async (event) => {
   
     const answerFromOpenAI = response.choices[0].message;
     let answerFromOpenAIAsJson = answerFromOpenAI.content 
-      ? JSON.parse(answerFromOpenAI.content) 
-      : null;
+      ? answerFromOpenAI.content 
+      : "{}";
     // Entferne den ```json und ``` Codeblock
     answerFromOpenAIAsJson = answerFromOpenAIAsJson.replace(/^```json\s+|\s+```$/g, '');
 
