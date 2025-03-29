@@ -245,3 +245,14 @@ input[type="file"] {
       font-weight: 600;
   }
   
+  .answerFromOpenAiContent{
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #eef0da; /* Helles Gelbgrün */    
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-align: left;
+
+  }

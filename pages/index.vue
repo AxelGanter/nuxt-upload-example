@@ -30,6 +30,8 @@
       <span v-if="uploadError">❌ Hoppla! {{ uploadError }}</span>
     </div>
 
+    <VueJsonPretty class="answerFromOpenAiContent" :data=answerFromOpenAIAsJson />
+
     <div v-if="uploadedFilePath" class="file-actions">
       <span>Super! Hier ist dein Bild:</span>
       <div class="button-group">
@@ -52,6 +54,25 @@
 // KEINE ÄNDERUNGEN HIER NÖTIG!
 // Der bestehende Code mit refs, handleFileChange, uploadImage, copyToClipboard etc. bleibt gleich.
 import { ref, onUnmounted } from 'vue';
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
+
+const answerFromOpenAIAsJson = ref<string | null>(null);
+
+onMounted(() => {  
+  answerFromOpenAIAsJson.value = JSON.parse(`{
+    "items": [
+      {
+        "name": "Cashewkerne",
+        "amount": "5 Stück",
+        "calories": 25
+      }
+    ],
+    "totalCalories": 25
+  }`);
+
+});
+ 
 
 const selectedFile = ref<File | null>(null);
 const previewUrl = ref<string | null>(null);
@@ -99,6 +120,8 @@ linkCopiedMessage.value = null;
 const formData = new FormData();
 formData.append('imageFile', selectedFile.value, selectedFile.value.name);
 
+// --- Upload to Backend ---
+// (Hier wird die URL des Backends verwendet, um die Datei hochzuladen)
 try {
   const response = await $fetch('/api/upload', { method: 'POST', body: formData });
   if (response.success) {
@@ -107,7 +130,13 @@ try {
         uploadedFilePath.value = response.filePath.replace(/\\/g, '/'); // Ersetze Backslashes durch Vorwärtsslashes
       }else{
         uploadedFilePath.value = "noFilePathProvided"; // Fallback-URL
-      }        
+      }  
+    if ('answerFromOpenAIAsJson' in response && response.answerFromOpenAIAsJson){
+        answerFromOpenAIAsJson.value = response.answerFromOpenAIAsJson || null;     
+      }else{
+        answerFromOpenAIAsJson.value = null
+      }
+      
   } else {
      throw new Error(response.message || 'Backend meldet einen Fehler.');
   }
@@ -123,6 +152,8 @@ try {
 } finally {
   uploading.value = false;
 }
+
+
 };
 
 

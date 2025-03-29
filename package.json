@@ -18,8 +18,10 @@
     "@vercel/blob": "^0.27.3",
     "eslint": "^9.23.0",
     "nuxt": "^3.16.1",
+    "openai": "^4.90.0",
     "typescript": "^5.8.2",
     "vue": "^3.5.13",
+    "vue-json-pretty": "^2.4.0",
     "vue-router": "^4.5.0"
   }
 }

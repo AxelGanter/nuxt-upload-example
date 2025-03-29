@@ -1,20 +1,12 @@
-// server/api/upload.post.ts
-import { defineEventHandler, readMultipartFormData, setResponseStatus } from 'h3';
-import fs from 'fs/promises'; // Use promises for async file operations
-import path from 'path';
-
-// Define the target directory for uploads relative to the project root
-// Using 'public/uploads' makes files potentially accessible via URL later
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
 
 // server/api/upload.post.ts
 import { defineEventHandler, readMultipartFormData, setResponseStatus } from 'h3';
 import { put } from '@vercel/blob'; // <--- Importieren
-import path from 'path';
 
-// UPLOAD_DIR wird nicht mehr direkt zum Speichern benötigt, aber vielleicht für Dateinamen
-// const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
+import OpenAI from "openai";
+import dotenv from 'dotenv';
 
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default defineEventHandler(async (event) => {
   // Kein fs.mkdir mehr nötig für Blob Storage
@@ -43,6 +35,60 @@ export default defineEventHandler(async (event) => {
     const sanitizedFilename = `${Date.now()}-${originalFilename.replace(/[^a-zA-Z0-9._-]/g, '')}`; 
     const pathname = `uploads/${sanitizedFilename}`; 
 
+
+
+    // send to openai -------------------------------
+    const base64 = fileData.data.toString('base64');
+    const mimeType = fileData.type;
+    
+    const imageUrl = `data:${mimeType};base64,${base64}`; 
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Analysiere das Bild und schätze die enthaltenen Lebensmittel mit Mengenangabe und Kalorien.
+    Antworte **nur** mit gültigem JSON im Format:
+    
+    {
+      "items": [
+        {
+          "name": "Lebensmittelname",
+          "amount": "geschätzte Menge",
+          "calories": geschätzte Kalorienzahl
+        }
+      ],
+      "totalCalories": Gesamtanzahl
+    }`
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: imageUrl,
+              },
+            },
+          ],
+        },
+      ],
+      temperature: 0.2,
+    });
+    
+  
+    const answerFromOpenAI = response.choices[0].message;
+    let answerFromOpenAIAsJson = answerFromOpenAI.content 
+      ? JSON.parse(answerFromOpenAI.content) 
+      : null;
+    // Entferne den ```json und ``` Codeblock
+    answerFromOpenAIAsJson = answerFromOpenAIAsJson.replace(/^```json\s+|\s+```$/g, '');
+
+    // Parsen des bereinigten JSON-Strings
+    answerFromOpenAIAsJson = JSON.parse(answerFromOpenAIAsJson);
+
+    // Upload to Vercel Blob
+
     console.log(`Uploading to Vercel Blob at path: ${pathname}`);
 
     // Verwende 'put' zum Hochladen
@@ -63,6 +109,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       message: 'File uploaded successfully to Vercel Blob!',
+      answerFromOpenAIAsJson,
       filePath: url // Die öffentliche URL der Datei zurückgeben
     };
 
@@ -75,6 +122,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: false,
       message: 'An error occurred during file upload to Blob Storage.',
+      answerFromOpenAIAsJson: null,
       error: error.message,
     };
   }
