@@ -58,6 +58,9 @@ export default defineEventHandler(async (event) => {
         {
           "name": "Lebensmittelname",
           "amount": "geschätzte Menge",
+          "fat": "geschätzte Fettzahl",
+          "carbs": "geschätzte Kohlenhydrate",
+          "protein": "geschätzte Eiweißzahl",
           "calories": geschätzte Kalorienzahl
         }
       ],
