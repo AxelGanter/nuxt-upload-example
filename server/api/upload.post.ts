@@ -101,27 +101,27 @@ export default defineEventHandler(async (event) => {
         }
     );
 
-    console.log(`File uploaded successfully to Vercel Blob. URL: ${url}`);
+    console.log(`File uploaded successfully - URL: ${url}`);
 
     // --- Ende Vercel Blob ---
 
     // Rückgabe an das Frontend
     return {
       success: true,
-      message: 'File uploaded successfully to Vercel Blob!',
+      message: 'File uploaded successfully',
       answerFromOpenAIAsJson,
       filePath: url // Die öffentliche URL der Datei zurückgeben
     };
 
   } catch (error: any) {
-    console.error('Error handling file upload to Vercel Blob:', error);
+    console.error('Error handling file upload:', error);
      // Spezifische Fehler von Vercel Blob abfangen?
      // if (error instanceof BlobAccessError) { ... }
 
     setResponseStatus(event, 500);
     return {
       success: false,
-      message: 'An error occurred during file upload to Blob Storage.',
+      message: 'An error occurred during file upload.',
       answerFromOpenAIAsJson: null,
       error: error.message,
     };
