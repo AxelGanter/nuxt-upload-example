@@ -1,3 +1,6 @@
+https://gist.github.com/parmentf/035de27d6ed1dce0b36a
+
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
