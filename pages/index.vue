@@ -3,17 +3,21 @@
     <h1>Bild hochladen! ✨</h1>
 
     <div class="input-options">
-      <label for="file-select-input" class="input-option-button select-button">
+      <label for="file-select-input" :class="['input-option-button camera-button', { 'disabled': isCompressing }]">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
         Bild auswählen
       </label>
-      <input id="file-select-input" type="file" @change="handleFileChange" accept="image/*" />
+      <input id="file-select-input" type="file" @change="handleFileChange" accept="image/*" :disabled="isCompressing"/>
 
-      <label for="camera-input" class="input-option-button camera-button">
+      <label for="camera-input" :class="['input-option-button camera-button', { 'disabled': isCompressing }]">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm-2 6c-1.84 0-3.48-.96-4.34-2.46l-.86-.86c-.2-.2-.2-.51 0-.71l.86-.86C4.52 12.65 6.16 11.69 8 11.69s3.48.96 4.34 2.45l.86.86c.2.2.2.51 0 .71l-.86.86C11.48 17.04 9.84 18 8 18zm10-4c0-1.84-1.52-3.35-3.66-4.34l-.86-.86c-.2-.2-.51-.2-.71 0l-.86.86C10.04 9.65 8.4 10.61 6.54 11.66l-.86-.86c-.2-.2-.51-.2-.71 0l-.86.86C3.2 12.52 2 14.16 2 16c0 1.84 1.52 3.35 3.66 4.34l.86.86c.2.2.51.2.71 0l.86-.86c1.96-1.05 3.6-2.01 5.46-2.96l.86.86c.2.2.51.2.71 0l.86-.86c.92-.92 1.66-2.09 1.66-3.4zM12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg> Foto machen
       </label>
-      <input id="camera-input" type="file" @change="handleFileChange" accept="image/*" capture="environment" />
-      </div>
+      <input id="camera-input" type="file" @change="handleFileChange" accept="image/*" capture="environment" :disabled="isCompressing"/>
+    </div>
+
+    <div v-if="isCompressing" class="compression-loading">
+      Bild wird optimiert, bitte warten... ✨
+    </div>
 
     <div v-if="previewUrl" class="image-preview">
       <h3>Vorschau:</h3>
@@ -57,6 +61,11 @@ import { ref, onUnmounted } from 'vue';
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 
+import imageCompression from 'browser-image-compression'; // <-- Hinzufügen
+
+// ... (Ihre bestehenden refs: selectedFile, previewUrl, etc.)
+const isCompressing = ref(false); // <-- NEU: Ladezustand für Komprimierung
+
 const answerFromOpenAIAsJson = ref<string | null>(null);
 
 onMounted(() => {  
@@ -83,27 +92,62 @@ const uploadedFilePath = ref<string | null>(null);
 const linkCopiedMessage = ref<string | null>(null);
 
 // --- Handle File Selection (wird von BEIDEN Inputs genutzt) ---
-const handleFileChange = (event: Event) => {
-uploadError.value = null;
-uploadSuccess.value = null;
-uploadedFilePath.value = null;
-linkCopiedMessage.value = null;
-selectedFile.value = null;
-if (previewUrl.value) {
-  URL.revokeObjectURL(previewUrl.value);
-  previewUrl.value = null;
-}
-const target = event.target as HTMLInputElement;
-if (target.files && target.files[0]) {
-  const file = target.files[0];
-  if (!file.type.startsWith('image/')) {
+
+const handleFileChange = async (event: Event) => { // <-- Funktion wird async
+  uploadError.value = null;
+  uploadSuccess.value = null;
+  uploadedFilePath.value = null;
+  linkCopiedMessage.value = null;
+  selectedFile.value = null;
+  isCompressing.value = false; // Reset compression state
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value);
+    previewUrl.value = null;
+  }
+
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    const originalFile = target.files[0]; // Originaldatei
+
+    if (!originalFile.type.startsWith('image/')) {
       uploadError.value = 'Bitte wähle eine Bilddatei aus.';
       return;
+    }
+
+    // --- Start Komprimierung ---
+    isCompressing.value = true; // Ladezustand aktivieren
+    console.log(`Original file size: ${(originalFile.size / 1024 / 1024).toFixed(2)} MB`);
+
+    const options = {
+      maxSizeMB: 1,          // Zielgröße unter 1 MB
+      maxWidthOrHeight: 1920, // Optional: Maximale Breite/Höhe (verkleinert auch)
+      useWebWorker: true,    // Optional: Nutzt Web Worker für bessere Performance (wenn möglich)
+      // initialQuality: 0.7 // Optional: Startqualität (0-1)
+    };
+
+    try {
+      const compressedFile = await imageCompression(originalFile, options); // Komprimieren
+      console.log(`Compressed file size: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
+
+      selectedFile.value = compressedFile; // Komprimierte Datei speichern
+      previewUrl.value = URL.createObjectURL(compressedFile); // Vorschau von komprimierter Datei
+
+    } catch (error) {
+      console.error('Image compression error:', error);
+      uploadError.value = 'Bild konnte nicht komprimiert werden. Bitte versuchen Sie es erneut.';
+      // Optional: Fallback auf Originaldatei? Oder Upload verhindern?
+      // selectedFile.value = originalFile; // Fallback auf Original?
+      // previewUrl.value = URL.createObjectURL(originalFile);
+    } finally {
+      isCompressing.value = false; // Ladezustand deaktivieren
+    }
+    // --- Ende Komprimierung ---
   }
-  selectedFile.value = file;
-  previewUrl.value = URL.createObjectURL(file);
-}
+   // Wichtig: Input-Wert zurücksetzen, damit dieselbe Datei erneut ausgewählt werden kann
+   target.value = '';
 };
+
+
 
 // --- Handle Upload ---
 // (uploadImage Funktion bleibt unverändert)

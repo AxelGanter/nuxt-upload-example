@@ -1,6 +1,6 @@
   /* Bestehende Styles bleiben weitgehend gleich... */
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap');
-  
+
   .upload-container {
     max-width: 500px;
     margin: 40px auto;
@@ -13,55 +13,87 @@
     color: #333;
   }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .upload-container {
-        margin: 0 auto;
-        padding: 15px;
+      margin: 0 auto;
+      padding: 15px;
     }
-}
-  
+  }
+
   h1 {
     font-family: 'Pacifico', cursive;
     color: #00796b;
     font-size: 2.8em;
     margin-bottom: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     h1 {
-        font-size: 2.4em;
-        margin-top: 10px;
-        margin-bottom: 10px;
+      font-size: 2.4em;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
-}
-  
+  }
+
   input[type="file"] {
     display: none;
   }
-  
-  
 
-/* Verstecke BEIDE file inputs */
-input[type="file"] {
+  /* assets/css/uploader-styles.css */
+
+  /* ... (Bestehende Styles) ... */
+
+  /* Style für deaktivierte Auswahl-Buttons während der Komprimierung */
+  .input-option-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    /* Verhindert Klicks auf das Label */
+  }
+
+  /* Style für die Ladeanzeige */
+  .compression-loading {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-style: italic;
+    color: #00796b;
+    font-weight: 600;
+    padding: 10px;
+    background-color: #e0f2f1;
+    border-radius: 8px;
+    display: inline-block;
+  }
+
+
+
+  /* Verstecke BEIDE file inputs */
+  input[type="file"] {
     display: none;
   }
-  
+
   /* Container für die beiden Auswahl-Buttons */
   .input-options {
-    display: flex; /* Ordnet Buttons nebeneinander an */
-    justify-content: center; /* Zentriert die Buttons */
-    gap: 15px; /* Abstand zwischen den Buttons */
-    margin-bottom: 25px; /* Abstand nach unten */
-    flex-wrap: wrap; /* Umbruch auf kleinen Bildschirmen */
+    display: flex;
+    /* Ordnet Buttons nebeneinander an */
+    justify-content: center;
+    /* Zentriert die Buttons */
+    gap: 15px;
+    /* Abstand zwischen den Buttons */
+    margin-bottom: 25px;
+    /* Abstand nach unten */
+    flex-wrap: wrap;
+    /* Umbruch auf kleinen Bildschirmen */
   }
-  
+
   /* Gemeinsamer Style für die Auswahl-Buttons (Labels) */
   .input-option-button {
-    display: inline-flex; /* Ermöglicht flex alignment für Icon/Text */
+    display: inline-flex;
+    /* Ermöglicht flex alignment für Icon/Text */
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Abstand zwischen Icon und Text */
+    gap: 8px;
+    /* Abstand zwischen Icon und Text */
     padding: 12px 20px;
     border-radius: 15px;
     font-weight: 600;
@@ -70,34 +102,38 @@ input[type="file"] {
     font-family: 'Poppins', sans-serif;
     font-size: 0.95em;
   }
-  
-  
+
+
   .select-button {
-    border: 2px solid #00796b; /* Beispiel: Dunklerer Rand */
+    border: 2px solid #00796b;
+    /* Beispiel: Dunklerer Rand */
     background-color: #ffffff;
     color: #00796b;
   }
-  
+
   .select-button:hover {
-    background-color: #b2dfdb; /* Beispiel: Etwas dunkler */
+    background-color: #b2dfdb;
+    /* Beispiel: Etwas dunkler */
     border-color: #004d40;
     transform: translateY(-2px);
   }
-  
+
   .camera-button {
-    border: 2px solid #00796b; /* Beispiel: Dunklerer Rand */
+    border: 2px solid #00796b;
+    /* Beispiel: Dunklerer Rand */
     background-color: #ffffff;
     color: #00796b;
   }
-  
+
   .camera-button:hover {
-    background-color: #b2dfdb; /* Beispiel: Etwas dunkler */
+    background-color: #b2dfdb;
+    /* Beispiel: Etwas dunkler */
     border-color: #004d40;
     transform: translateY(-2px);
   }
 
 
-  
+
   .image-preview {
     margin-top: 25px;
     margin-bottom: 25px;
@@ -106,14 +142,14 @@ input[type="file"] {
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 15px;
   }
-  
+
   .image-preview h3 {
     margin: 0 0 10px 0;
     font-size: 1em;
     color: #00796b;
     font-weight: 600;
   }
-  
+
   .image-preview img {
     max-width: 100%;
     max-height: 250px;
@@ -122,7 +158,7 @@ input[type="file"] {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   .upload-button {
     background: linear-gradient(45deg, #26a69a, #00897b);
     color: white;
@@ -140,24 +176,24 @@ input[type="file"] {
     align-items: center;
     gap: 8px;
   }
-  
+
   .upload-button:hover:not(:disabled) {
     background: linear-gradient(45deg, #00897b, #00796b);
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(0, 121, 107, 0.5);
   }
-  
+
   .upload-button:active:not(:disabled) {
-      transform: scale(0.98);
+    transform: scale(0.98);
   }
-  
+
   .upload-button:disabled {
     background: #a0a0a0;
     cursor: not-allowed;
     opacity: 0.7;
     box-shadow: none;
   }
-  
+
   .status-message {
     margin-top: 20px;
     padding: 12px 20px;
@@ -169,90 +205,100 @@ input[type="file"] {
     justify-content: center;
     gap: 8px;
   }
-  
+
   .status-message.success {
     background-color: #e8f5e9;
     color: #2e7d32;
     border: 1px solid #a5d6a7;
   }
-  
+
   .status-message.error {
     background-color: #ffebee;
     color: #c62828;
     border: 1px solid #ef9a9a;
   }
-  
+
   /* NEU: Styles für Aktionen nach Upload */
   .file-actions {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid #b2dfdb; /* Leichte Trennlinie */
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #b2dfdb;
+    /* Leichte Trennlinie */
   }
 
   @media (max-width: 768px) {
     .file-actions {
-        margin-top: 10px;
-    }
-}
-  
-  .file-actions span:first-child { /* Der Text "Super! Hier ist dein Bild:" */
-      display: block;
-      margin-bottom: 15px;
-      font-size: 1em;
-      color: #555;
-  }
-  
-  .button-group {
-      display: flex;
-      justify-content: center;
-      gap: 15px; /* Abstand zwischen den Buttons */
-      flex-wrap: wrap; /* Umbruch bei schmalen Bildschirmen */
-  }
-  
-  .action-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 15px;
-      border-radius: 8px;
-      border: 1px solid #00796b; /* Grüne Kontur */
-      background-color: #ffffff;
-      color: #00796b; /* Grüne Schrift */
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 0.9em;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-  }
-  
-  .action-button:hover {
-      background-color: #e0f2f1; /* Helles Grün als Hover */
-      color: #004d40; /* Dunkleres Grün */
-      border-color: #004d40;
-      transform: translateY(-1px);
-  }
-  
-  .action-button svg {
-      margin-bottom: -1px; /* Kleine Anpassung für vertikale Ausrichtung */
-  }
-  
-  .copy-success-message {
-      display: block;
       margin-top: 10px;
-      font-size: 0.85em;
-      color: #2e7d32; /* Erfolgsgrün */
-      font-weight: 600;
+    }
   }
-  
-  .answerFromOpenAiContent{
+
+  .file-actions span:first-child {
+    /* Der Text "Super! Hier ist dein Bild:" */
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1em;
+    color: #555;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    /* Abstand zwischen den Buttons */
+    flex-wrap: wrap;
+    /* Umbruch bei schmalen Bildschirmen */
+  }
+
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid #00796b;
+    /* Grüne Kontur */
+    background-color: #ffffff;
+    color: #00796b;
+    /* Grüne Schrift */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-button:hover {
+    background-color: #e0f2f1;
+    /* Helles Grün als Hover */
+    color: #004d40;
+    /* Dunkleres Grün */
+    border-color: #004d40;
+    transform: translateY(-1px);
+  }
+
+  .action-button svg {
+    margin-bottom: -1px;
+    /* Kleine Anpassung für vertikale Ausrichtung */
+  }
+
+  .copy-success-message {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #2e7d32;
+    /* Erfolgsgrün */
+    font-weight: 600;
+  }
+
+  .answerFromOpenAiContent {
     margin-top: 20px;
     padding: 15px;
     border-radius: 10px;
-    background-color: #eef0da; /* Helles Gelbgrün */    
+    background-color: #eef0da;
+    /* Helles Gelbgrün */
     font-family: 'Poppins', sans-serif;
     font-size: 0.95em;
     line-height: 1.5;
     text-align: left;
-
   }
