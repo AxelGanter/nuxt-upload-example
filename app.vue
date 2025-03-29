@@ -3,12 +3,14 @@
     <main>
       <NuxtPage />
       <Impressum />
+      <LogDisplay />
     </main>     
   </div>
 </template>
 
 <script setup lang="ts">
 import { Analytics } from '@vercel/analytics/nuxt'
+import { usePageLogger } from '~/composables/usePageLogger';
 // Normalerweise braucht app.vue hier wenig bis keinen spezifischen Script-Code,
 // es sei denn, Sie verwalten globale Zustände oder Layout-Logik.
 </script>
