@@ -63,12 +63,12 @@ onMounted(() => {
   answerFromOpenAIAsJson.value = JSON.parse(`{
     "items": [
       {
-        "name": "Cashewkerne",
-        "amount": "5 Stück",
-        "calories": 25
+        "name": "Beispielprodukt",
+        "amount": "2 Stück",
+        "calories": 50
       }
     ],
-    "totalCalories": 25
+    "totalCalories": 50
   }`);
 
 });
