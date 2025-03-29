@@ -1,5 +1,8 @@
 <template>
   <div class="upload-container">
+    <div class="version">
+      <span>v1.0.1</span>
+    </div>
     <h1>Bild hochladen! ✨</h1>
 
     <div class="input-options">

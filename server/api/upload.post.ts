@@ -56,12 +56,15 @@ export default defineEventHandler(async (event) => {
     {
       "items": [
         {
+          "kategorien": "Lebensmittelkategorie",
           "name": "Lebensmittelname",
           "amount": "geschätzte Menge",
-          "fat": "geschätzte Fettzahl",
-          "carbs": "geschätzte Kohlenhydrate",
-          "protein": "geschätzte Eiweißzahl",
-          "calories": geschätzte Kalorienzahl
+          "fat": "geschätzte Fettzahl in Gramm (ohne Einheit)",
+          "carbs": "geschätzte Kohlenhydrate in Gramm (ohne Einheit)",
+          "protein": "geschätzte Eiweißzahl in Gramm (ohne Einheit)",
+          "calories": geschätzte Kalorienzahl,
+          "imageDescription_Food": "Bildbeschreibung (vom Lebensmittel)",
+          "imageDescription_other": "Bildbeschreibung (unabhängig vom Lebensmittel)"
         }
       ],
       "totalCalories": Gesamtanzahl
